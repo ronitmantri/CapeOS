@@ -104,10 +104,54 @@
     .btn svg { width: 15px; height: 15px; }
     .hero-note { margin-top: 17px; color: #737e90; font-size: 11px; }
 
-    .hero-preview { max-width: 1000px; margin: 75px auto 0; position: relative; perspective: 1100px; }
-    .preview-frame { border: 1px solid rgba(193,213,245,.21); border-radius: 22px; padding: 8px; background: linear-gradient(140deg, rgba(255,255,255,.12), rgba(255,255,255,.025)); box-shadow: 0 45px 110px rgba(0,0,0,.5), 0 0 90px rgba(95,139,210,.10); transform: rotateX(3deg); }
-    .preview-screen { aspect-ratio: 16 / 9; min-height: 0; border-radius: 15px; overflow: hidden; position: relative; background: #090d14; }
-    .hero-screenshot { display:block; width:100%; height:100%; object-fit:cover; object-position:center; background:#090d14; }
+    /* Main CapeOS preview: show the complete screenshot as a plain image. */
+    .hero-preview {
+      width: 100%;
+      max-width: 1000px;
+      margin: 75px auto 0;
+      position: relative;
+      overflow: visible;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      filter: none;
+      transform: none;
+    }
+    .preview-frame,
+    .preview-screen {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      aspect-ratio: auto;
+      padding: 0;
+      overflow: visible;
+      position: static;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      filter: none;
+      transform: none;
+    }
+    .hero-screenshot {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      max-height: none;
+      object-fit: contain;
+      object-position: center;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      outline: 0;
+      box-shadow: none;
+      filter: none;
+      transform: none;
+      clip-path: none;
+    }
     .screen-bar { height: 34px; position: relative; z-index: 2; display:flex; justify-content:space-between; align-items:center; padding:0 15px; background:rgba(5,9,15,.45); color:rgba(255,255,255,.82); font-size:9px; }
     .screen-bar-right { display:flex; align-items:center; gap:11px; }
     .desktop-label { position:absolute; left:23px; bottom:21px; z-index:2; color:rgba(255,255,255,.72); font-size:10px; }
@@ -243,7 +287,7 @@
       h1 { font-size:clamp(52px,15vw,76px); }
       .hero-copy { font-size:14px; }
       .hero-preview { margin-top:55px; }
-      .preview-screen { min-height:0; aspect-ratio:16 / 9; }
+      .preview-screen { min-height:0; aspect-ratio:auto; }
       .desktop-window { top:64px; height:174px; width:84%; }
       .window-content { padding:12px; gap:8px; }
       .mock-heading { font-size:14px; }
@@ -301,7 +345,7 @@
         </div>
         <div class="hero-note reveal delay-3">A concept experience · CapeOS 1.0 Demo</div>
 
-        <div class="hero-preview reveal delay-3" aria-label="CapeOS desktop screenshot preview">
+        <div class="hero-preview" aria-label="CapeOS desktop screenshot preview">
           <div class="preview-frame">
             <div class="preview-screen">
               <img class="hero-screenshot" src="https://i.postimg.cc/tJSvfPDH/Screenshot-2026-11-10-at-9-29-38-AM.png" alt="CapeOS desktop interface" fetchpriority="high" />
