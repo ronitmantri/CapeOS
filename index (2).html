@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080a0e" />
+  <meta name="description" content="CapeOS is a privacy-first operating system concept that brings together thoughtful design, flexibility and control. Explore the interactive demo." />
+  <title>CapeOS — Your digital space, reimagined.</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080a0e;
+      --bg-soft: #0d1016;
+      --panel: rgba(255,255,255,.045);
+      --panel-strong: rgba(255,255,255,.075);
+      --line: rgba(255,255,255,.105);
+      --text: #f4f6fb;
+      --muted: #9ba4b4;
+      --subtle: #707a8b;
+      --accent: #a7c7ff;
+      --accent-strong: #78a9ff;
+      --mint: #a5e9d5;
+      --radius: 25px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% -15%, rgba(85,123,190,.18), transparent 42%),
+        radial-gradient(ellipse at 100% 50%, rgba(78,112,160,.07), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .16;
+      z-index: -1;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, black, transparent 80%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .wrap { width: min(var(--max), calc(100% - 48px)); margin: 0 auto; }
+
+    .nav-shell {
+      position: fixed;
+      top: 14px;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .nav {
+      width: min(1110px, calc(100% - 32px));
+      min-height: 64px;
+      margin: auto;
+      padding: 0 17px 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      background: rgba(12,15,21,.72);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      box-shadow: 0 12px 42px rgba(0,0,0,.22);
+      pointer-events: auto;
+    }
+    .wordmark { font-size: 17px; letter-spacing: -.055em; font-weight: 750; }
+    .nav-links { display: flex; align-items: center; gap: 29px; color: #b2bac8; font-size: 13px; }
+    .nav-links a { transition: color .2s ease; }
+    .nav-links a:hover { color: white; }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-demo { padding: 10px 16px; border-radius: 11px; background: #edf3ff; color: #101722; font-size: 12px; font-weight: 750; transition: transform .2s, background .2s; }
+    .nav-demo:hover { transform: translateY(-2px); background: white; }
+    .menu-toggle { display: none; border: 0; background: transparent; color: white; padding: 8px; cursor: pointer; }
+
+    .hero { min-height: 790px; padding: 190px 0 100px; text-align: center; position: relative; isolation: isolate; }
+    .hero-glow { position: absolute; width: 720px; height: 420px; left: 50%; top: 165px; transform: translateX(-50%); border-radius: 50%; background: rgba(92,135,206,.12); filter: blur(90px); z-index: -1; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 7px 12px; border: 1px solid rgba(172,200,255,.2); border-radius: 999px; color: #c4d7ff; background: rgba(122,163,234,.075); font-size: 11px; letter-spacing: .13em; text-transform: uppercase; font-weight: 700; }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: #9ee7cf; box-shadow: 0 0 12px #9ee7cf; }
+    h1 { margin: 25px auto 19px; max-width: 900px; font-size: clamp(54px, 8.2vw, 104px); line-height: .99; letter-spacing: -.085em; font-weight: 720; }
+    h1 .gradient { color: transparent; background: linear-gradient(100deg, #fff 4%, #bcd4ff 49%, #86b2f1 100%); background-clip: text; -webkit-background-clip: text; }
+    .hero-copy { max-width: 590px; margin: 0 auto; color: #a9b2c1; font-size: clamp(15px, 1.7vw, 18px); line-height: 1.8; }
+    .hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 33px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 49px; padding: 0 20px; border-radius: 13px; border: 1px solid transparent; font-size: 13px; font-weight: 750; cursor: pointer; transition: transform .22s, border-color .22s, background .22s, box-shadow .22s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-primary { color: #101722; background: #edf3ff; box-shadow: 0 8px 28px rgba(140,178,239,.13); }
+    .btn-primary:hover { background: #fff; box-shadow: 0 12px 38px rgba(140,178,239,.23); }
+    .btn-secondary { color: #e5eaf3; border-color: rgba(255,255,255,.15); background: rgba(255,255,255,.045); }
+    .btn-secondary:hover { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.25); }
+    .btn svg { width: 15px; height: 15px; }
+    .hero-note { margin-top: 17px; color: #737e90; font-size: 11px; }
+
+    .hero-preview { max-width: 1000px; margin: 75px auto 0; position: relative; perspective: 1100px; }
+    .preview-frame { border: 1px solid rgba(193,213,245,.21); border-radius: 22px; padding: 8px; background: linear-gradient(140deg, rgba(255,255,255,.12), rgba(255,255,255,.025)); box-shadow: 0 45px 110px rgba(0,0,0,.5), 0 0 90px rgba(95,139,210,.10); transform: rotateX(3deg); }
+    .preview-screen { aspect-ratio: 16 / 9; min-height: 0; border-radius: 15px; overflow: hidden; position: relative; background: #090d14; }
+    .hero-screenshot { display:block; width:100%; height:100%; object-fit:contain; background:#090d14; }
+    .screen-bar { height: 34px; position: relative; z-index: 2; display:flex; justify-content:space-between; align-items:center; padding:0 15px; background:rgba(5,9,15,.45); color:rgba(255,255,255,.82); font-size:9px; }
+    .screen-bar-right { display:flex; align-items:center; gap:11px; }
+    .desktop-label { position:absolute; left:23px; bottom:21px; z-index:2; color:rgba(255,255,255,.72); font-size:10px; }
+    .desktop-window { position:absolute; z-index:2; top:85px; left:50%; transform:translateX(-50%); width:min(67%,620px); height:265px; border:1px solid rgba(255,255,255,.26); border-radius:12px; overflow:hidden; background:rgba(14,20,29,.76); box-shadow:0 20px 65px rgba(0,0,0,.36); backdrop-filter:blur(18px); }
+    .window-top { height:31px; display:flex; align-items:center; gap:6px; padding:0 11px; border-bottom:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.035); }
+    .window-top i { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.35); }
+    .window-title { margin-left:7px; color:rgba(255,255,255,.65); font-size:9px; }
+    .window-content { padding:20px; display:grid; grid-template-columns:1fr 1.3fr; gap:14px; }
+    .mock-heading { font-size:19px; letter-spacing:-.06em; font-weight:650; }
+    .mock-sub { margin-top:5px; font-size:8px; color:#9daabd; }
+    .mock-tile { border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.055); border-radius:8px; padding:11px; min-height:90px; }
+    .mock-tile b { display:block; font-size:8px; color:#eaf1fc; margin-bottom:9px; }
+    .mock-line { height:5px; border-radius:4px; background:rgba(191,213,244,.28); margin:7px 0; }
+    .mock-line.short { width:56%; }
+    .mock-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
+    .dock { z-index:3; position:absolute; left:50%; bottom:16px; transform:translateX(-50%); display:flex; gap:8px; padding:8px 11px; background:rgba(9,14,22,.62); border:1px solid rgba(255,255,255,.16); border-radius:13px; backdrop-filter:blur(18px); }
+    .dock span { display:grid; place-items:center; width:27px; height:27px; border-radius:8px; background:linear-gradient(145deg,#a9c7ee,#526e94); color:#142236; font-size:11px; font-weight:800; }
+
+    section { position: relative; }
+    .section { padding: 110px 0; }
+    .section-head { max-width: 650px; margin-bottom: 45px; }
+    .kicker { color: #a8c6fb; text-transform: uppercase; letter-spacing: .16em; font-size: 10px; font-weight: 800; }
+    h2 { margin: 12px 0 13px; font-size: clamp(35px,5vw,57px); line-height: 1.05; letter-spacing: -.07em; font-weight: 680; }
+    .section-desc { margin: 0; color: var(--muted); max-width: 570px; font-size: 15px; line-height: 1.8; }
+
+    .privacy-section { border-top:1px solid rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg,rgba(255,255,255,.018),transparent); }
+    .privacy-layout { display:grid; grid-template-columns:1.05fr .95fr; gap:55px; align-items:center; }
+    .privacy-art { min-height:360px; border:1px solid var(--line); border-radius:26px; background:radial-gradient(circle at 50% 40%,rgba(111,159,222,.15),transparent 45%),rgba(255,255,255,.025); display:grid; place-items:center; position:relative; overflow:hidden; }
+    .privacy-orbit { position:absolute; width:270px; height:270px; border:1px solid rgba(164,194,240,.18); border-radius:50%; box-shadow:0 0 70px rgba(104,153,223,.08); }
+    .privacy-orbit::before,.privacy-orbit::after { content:""; position:absolute; border:1px solid rgba(164,194,240,.12); border-radius:50%; inset:27px; }
+    .privacy-orbit::after { inset:55px; }
+    .shield { width:105px; height:120px; position:relative; z-index:2; display:grid; place-items:center; color:#d8e7ff; filter:drop-shadow(0 0 25px rgba(124,172,239,.28)); }
+    .shield svg { width:100%; height:100%; }
+    .privacy-chip { position:absolute; padding:9px 12px; border:1px solid rgba(255,255,255,.12); background:rgba(16,24,36,.82); color:#cbd6e7; border-radius:10px; font-size:10px; backdrop-filter:blur(12px); }
+    .privacy-chip.one { top:65px; left:34px; }
+    .privacy-chip.two { top:93px; right:28px; }
+    .privacy-chip.three { bottom:57px; left:50%; transform:translateX(-50%); }
+    .feature-list { display:grid; gap:22px; margin-top:30px; }
+    .feature { display:grid; grid-template-columns:38px 1fr; gap:14px; align-items:start; }
+    .feature-icon { width:37px; height:37px; display:grid; place-items:center; border:1px solid rgba(164,194,240,.15); border-radius:11px; background:rgba(130,170,231,.08); color:#bad2fa; }
+    .feature-icon svg { width:17px; height:17px; }
+    .feature h3 { margin:0 0 4px; font-size:14px; letter-spacing:-.02em; }
+    .feature p { margin:0; color:var(--muted); font-size:12px; line-height:1.7; }
+
+    .experience-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .experience-card { border:1px solid var(--line); border-radius:19px; overflow:hidden; background:rgba(255,255,255,.027); transition:transform .3s,border-color .3s,background .3s; }
+    .experience-card:hover { transform:translateY(-7px); border-color:rgba(170,199,243,.28); background:rgba(255,255,255,.045); }
+    .experience-art { height:225px; position:relative; overflow:hidden; background:#090d14; }
+    .screenshot-image { display:block; width:100%; height:100%; object-fit:contain; background:#090d14; }
+    .experience-art .art-caption { padding:5px 8px; border:1px solid rgba(255,255,255,.13); border-radius:6px; background:rgba(5,8,13,.62); backdrop-filter:blur(10px); }
+    .experience-art.lock { background:radial-gradient(circle at 55% 20%,#54759b,#1b3045 46%,#101924); }
+    .experience-art.desktop { background:radial-gradient(circle at 80% 10%,#667b91,#24364b 38%,#101923); }
+    .experience-art.multitask { background:radial-gradient(circle at 50% 40%,#4b617b,#1a2738 65%,#101720); }
+    .art-caption { position:absolute; top:13px; left:14px; z-index:4; font-size:8px; letter-spacing:.14em; color:rgba(255,255,255,.63); text-transform:uppercase; }
+    .lock-clock { position:absolute; top:54px; left:0; right:0; color:#fff; text-align:center; font-size:47px; font-weight:300; letter-spacing:-.08em; text-shadow:0 4px 22px rgba(0,0,0,.2); }
+    .lock-date { position:absolute; top:105px; left:0; right:0; text-align:center; font-size:8px; color:rgba(255,255,255,.79); }
+    .lock-widget { position:absolute; bottom:25px; left:50%; transform:translateX(-50%); display:flex; gap:7px; }
+    .lock-widget span { width:53px; height:38px; border:1px solid rgba(255,255,255,.19); border-radius:8px; background:rgba(255,255,255,.12); backdrop-filter:blur(10px); }
+    .mini-top { position:absolute; top:0; left:0; right:0; height:22px; background:rgba(6,10,16,.52); }
+    .mini-window { position:absolute; background:rgba(12,19,29,.78); border:1px solid rgba(255,255,255,.26); border-radius:7px; box-shadow:0 9px 23px rgba(0,0,0,.32); backdrop-filter:blur(10px); }
+    .mini-window::before { content:""; display:block; height:11px; border-bottom:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); border-radius:7px 7px 0 0; }
+    .mini-window.w1 { width:64%; height:115px; top:57px; left:17%; }
+    .mini-window.w2 { width:34%; height:78px; top:87px; left:7%; }
+    .mini-window.w3 { width:32%; height:90px; top:102px; right:7%; }
+    .mini-dock { position:absolute; left:50%; bottom:12px; transform:translateX(-50%); height:20px; width:45%; border-radius:7px; background:rgba(6,10,16,.64); border:1px solid rgba(255,255,255,.18); }
+    .card-copy { padding:19px 19px 21px; }
+    .card-copy h3 { margin:0 0 7px; font-size:15px; letter-spacing:-.03em; }
+    .card-copy p { margin:0; color:var(--muted); font-size:12px; line-height:1.7; }
+    .screenshot-link { display:inline-flex; align-items:center; gap:7px; margin-top:14px; font-size:11px; color:#c4d8fa; }
+    .screenshot-link:hover { color:white; }
+
+    .principles { padding-top:20px; }
+    .principle-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .principle { padding:23px; min-height:160px; border:1px solid var(--line); border-radius:17px; background:rgba(255,255,255,.025); }
+    .principle-number { color:#88aeea; font-size:10px; letter-spacing:.12em; }
+    .principle h3 { margin:20px 0 7px; font-size:16px; letter-spacing:-.035em; }
+    .principle p { margin:0; max-width:280px; color:var(--muted); font-size:12px; line-height:1.75; }
+
+    .cta-section { padding:100px 0 115px; }
+    .cta-panel { position:relative; overflow:hidden; text-align:center; padding:76px 24px; border:1px solid rgba(172,199,244,.18); border-radius:28px; background:radial-gradient(ellipse at 50% 0%,rgba(103,149,218,.17),transparent 56%),linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.018)); }
+    .cta-panel::before { content:""; position:absolute; width:520px; height:240px; left:50%; top:-180px; transform:translateX(-50%); border-radius:50%; background:rgba(132,173,233,.15); filter:blur(60px); }
+    .cta-panel h2 { position:relative; max-width:650px; margin:0 auto 15px; }
+    .cta-panel p { position:relative; max-width:470px; margin:0 auto; color:var(--muted); font-size:14px; line-height:1.8; }
+    .cta-panel .hero-actions { position:relative; margin-top:26px; }
+    footer { border-top:1px solid rgba(255,255,255,.07); padding:25px 0 32px; color:#737e90; font-size:11px; }
+    .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; }
+    .footer-name { color:#dce5f3; font-weight:750; letter-spacing:-.04em; font-size:14px; }
+    .footer-links { display:flex; gap:20px; }
+    .footer-links a:hover { color:white; }
+
+    .modal-backdrop { position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,.68); backdrop-filter:blur(12px); }
+    .modal-backdrop.open { display:flex; animation:fadeIn .2s ease both; }
+    .modal { width:min(490px,100%); border:1px solid rgba(255,255,255,.14); border-radius:22px; background:#10151e; box-shadow:0 30px 100px rgba(0,0,0,.55); padding:27px; position:relative; animation:modalIn .25s ease both; }
+    .modal-close { position:absolute; top:16px; right:16px; width:31px; height:31px; display:grid; place-items:center; border:1px solid var(--line); border-radius:9px; color:#c9d2df; background:rgba(255,255,255,.04); cursor:pointer; }
+    .modal h2 { font-size:29px; margin:7px 0 8px; }
+    .modal-intro { margin:0 0 20px; color:var(--muted); font-size:12px; line-height:1.7; }
+    .form-grid { display:grid; gap:12px; }
+    .field label { display:block; margin-bottom:6px; color:#c4cedd; font-size:11px; font-weight:650; }
+    .field input,.field textarea,.field select { width:100%; border:1px solid rgba(255,255,255,.12); border-radius:10px; outline:none; background:rgba(255,255,255,.045); color:#f4f6fb; padding:11px 12px; font-size:12px; transition:border-color .2s; }
+    .field input:focus,.field textarea:focus,.field select:focus { border-color:rgba(155,190,247,.65); }
+    .field textarea { min-height:95px; resize:vertical; }
+    .field select option { background:#10151e; }
+    .form-hint { color:#788496; font-size:10px; line-height:1.6; }
+    .form-status { min-height:17px; color:#a5e9d5; font-size:11px; }
+    .modal .btn { width:100%; }
+
+    .reveal { opacity:0; transform:translateY(25px); transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1); }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .delay-1 { transition-delay:.12s; }
+    .delay-2 { transition-delay:.23s; }
+    .delay-3 { transition-delay:.34s; }
+    @keyframes fadeIn { from {opacity:0} to {opacity:1} }
+    @keyframes modalIn { from {opacity:0;transform:translateY(12px) scale(.98)} to {opacity:1;transform:translateY(0) scale(1)} }
+
+    @media (max-width: 850px) {
+      .nav-links { gap:17px; }
+      .privacy-layout { grid-template-columns:1fr; gap:35px; }
+      .privacy-art { min-height:310px; }
+      .experience-grid { grid-template-columns:1fr 1fr; }
+      .experience-card:last-child { grid-column:span 2; }
+      .experience-card:last-child .experience-art { height:250px; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width:min(100% - 32px,var(--max)); }
+      .nav-shell { top:9px; }
+      .nav { width:calc(100% - 18px); min-height:58px; padding:0 12px 0 16px; }
+      .menu-toggle { display:block; }
+      .nav-links { display:none; position:absolute; top:65px; left:0; right:0; padding:17px; border:1px solid var(--line); border-radius:15px; background:rgba(12,15,21,.96); flex-direction:column; align-items:stretch; gap:0; }
+      .nav-links.open { display:flex; }
+      .nav-links a { padding:12px 7px; }
+      .nav-demo { padding:9px 12px; font-size:11px; }
+      .hero { min-height:0; padding:150px 0 70px; }
+      h1 { font-size:clamp(52px,15vw,76px); }
+      .hero-copy { font-size:14px; }
+      .hero-preview { margin-top:55px; }
+      .preview-screen { min-height:0; aspect-ratio:16 / 9; }
+      .desktop-window { top:64px; height:174px; width:84%; }
+      .window-content { padding:12px; gap:8px; }
+      .mock-heading { font-size:14px; }
+      .mock-tile { min-height:62px; padding:7px; }
+      .dock { bottom:10px; }
+      .section { padding:78px 0; }
+      .section-head { margin-bottom:30px; }
+      .experience-grid { grid-template-columns:1fr; }
+      .experience-card:last-child { grid-column:auto; }
+      .experience-art,.experience-card:last-child .experience-art { height:210px; }
+      .principle-grid { grid-template-columns:1fr; }
+      .principle { min-height:0; }
+      .cta-section { padding:70px 0 80px; }
+      .cta-panel { padding:55px 19px; }
+      .footer-inner { flex-direction:column; align-items:flex-start; }
+      .footer-links { flex-wrap:wrap; }
+      .privacy-chip.one { left:12px; }
+      .privacy-chip.two { right:12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+      .reveal { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-shell">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="wordmark" href="#top" aria-label="CapeOS home">CapeOS</a>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#experience">The experience</a>
+        <a href="#principles">Principles</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-demo" href="/demo.html">Explore the demo <span aria-hidden="true">↗</span></a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <div class="wrap">
+        <div class="eyebrow reveal"><span class="eyebrow-dot"></span> A new perspective on your digital world</div>
+        <h1 class="reveal delay-1">Your world.<br><span class="gradient">Your way.</span></h1>
+        <p class="hero-copy reveal delay-2">Meet CapeOS: a privacy-first operating system concept built around a simple idea — technology should feel powerful, personal and completely yours.</p>
+        <div class="hero-actions reveal delay-3">
+          <a class="btn btn-primary" href="/demo.html">Explore the demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <button class="btn btn-secondary" type="button" data-open-contact>Contact / request a quote</button>
+        </div>
+        <div class="hero-note reveal delay-3">A concept experience · CapeOS 1.0 Demo</div>
+
+        <div class="hero-preview reveal delay-3" aria-label="CapeOS desktop screenshot preview">
+          <div class="preview-frame">
+            <div class="preview-screen">
+              <img class="hero-screenshot" src="https://i.postimg.cc/tJSvfPDH/Screenshot-2026-11-10-at-9-29-38-AM.png" alt="CapeOS desktop interface" fetchpriority="high" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section privacy-section" id="about">
+      <div class="wrap privacy-layout">
+        <div class="privacy-art reveal" aria-label="Abstract privacy illustration">
+          <div class="privacy-orbit"></div>
+          <div class="shield"><svg viewBox="0 0 100 116" fill="none"><path d="M50 5 88 20v29c0 26-16 47-38 61C28 96 12 75 12 49V20L50 5Z" stroke="currentColor" stroke-width="2.5" fill="rgba(152,190,245,.10)"/><path d="m34 57 11 11 23-25" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="privacy-chip one">Private by design</div>
+          <div class="privacy-chip two">You stay in control</div>
+          <div class="privacy-chip three">Your data belongs to you</div>
+        </div>
+        <div class="reveal delay-1">
+          <div class="kicker">Built around you</div>
+          <h2>Privacy isn't an add-on.<br>It's the starting point.</h2>
+          <p class="section-desc">CapeOS puts privacy at the heart of the experience. The concept brings familiar, useful technology together with a clearer sense of control over your digital space.</p>
+          <div class="feature-list">
+            <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 6v5c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V6l8-3Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></div><div><h3>Privacy-first thinking</h3><p>A design philosophy that treats your information with care and makes permissions easier to understand.</p></div></div>
+            <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><h3>Designed to feel natural</h3><p>Thoughtful details, familiar interactions and a clean interface that stays out of your way.</p></div></div>
+            <div class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16M4 12h10M4 18h13"/><circle cx="18" cy="12" r="2"/><circle cx="20" cy="18" r="1"/></svg></div><div><h3>Flexibility without the clutter</h3><p>Make the experience feel like yours, with useful controls and room to personalize.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div class="kicker">A closer look</div>
+          <h2>One system. Different moments.</h2>
+          <p class="section-desc">From the first moment you wake your device to a desktop full of things in motion, CapeOS is designed to keep the experience feeling connected.</p>
+        </div>
+        <div class="experience-grid">
+          <article class="experience-card reveal">
+            <a href="https://i.postimg.cc/3NSf6p1s/Screenshot-2026-11-10-at-9-29-29-AM.png" target="_blank" rel="noopener noreferrer" aria-label="Open the CapeOS lock screen screenshot">
+              <div class="experience-art lock"><img class="screenshot-image" src="https://i.postimg.cc/3NSf6p1s/Screenshot-2026-11-10-at-9-29-29-AM.png" alt="CapeOS lock screen" loading="lazy" /><div class="art-caption">01 / Lock screen</div></div>
+            </a>
+            <div class="card-copy"><h3>A considered first impression</h3><p>A calm lock screen that brings the essentials forward without overwhelming the moment.</p><a class="screenshot-link" href="https://i.postimg.cc/3NSf6p1s/Screenshot-2026-11-10-at-9-29-29-AM.png" target="_blank" rel="noopener noreferrer">Open original screenshot <span>↗</span></a></div>
+          </article>
+          <article class="experience-card reveal delay-1">
+            <a href="https://i.postimg.cc/tJSvfPDH/Screenshot-2026-11-10-at-9-29-38-AM.png" target="_blank" rel="noopener noreferrer" aria-label="Open the CapeOS desktop screenshot">
+              <div class="experience-art desktop"><img class="screenshot-image" src="https://i.postimg.cc/tJSvfPDH/Screenshot-2026-11-10-at-9-29-38-AM.png" alt="CapeOS desktop interface" loading="lazy" /><div class="art-caption">02 / Desktop</div></div>
+            </a>
+            <div class="card-copy"><h3>Your space, ready to work</h3><p>A desktop built to feel familiar, organized and unmistakably its own.</p><a class="screenshot-link" href="https://i.postimg.cc/tJSvfPDH/Screenshot-2026-11-10-at-9-29-38-AM.png" target="_blank" rel="noopener noreferrer">Open original screenshot <span>↗</span></a></div>
+          </article>
+          <article class="experience-card reveal delay-2">
+            <a href="https://ibb.co/fYQNhxnt" target="_blank" rel="noopener noreferrer" aria-label="Open the CapeOS multitasking screenshot">
+              <div class="experience-art multitask"><div class="art-caption">03 / Multitasking</div><div class="mini-top"></div><div class="mini-window w1"></div><div class="mini-window w2"></div><div class="mini-window w3"></div><div class="mini-dock"></div></div>
+            </a>
+            <div class="card-copy"><h3>Room for everything</h3><p>Multiple windows, overlapping workflows and the freedom to move between tasks.</p><a class="screenshot-link" href="https://ibb.co/fYQNhxnt" target="_blank" rel="noopener noreferrer">Open original screenshot <span>↗</span></a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section principles" id="principles">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div class="kicker">The CapeOS mindset</div>
+          <h2>Good technology should<br>feel like yours.</h2>
+          <p class="section-desc">CapeOS is an exploration of what an operating system can feel like when simplicity, privacy and personal choice are considered together.</p>
+        </div>
+        <div class="principle-grid">
+          <article class="principle reveal"><div class="principle-number">01 — CLARITY</div><h3>Less friction. More flow.</h3><p>Put useful tools where people expect them, and keep the experience understandable.</p></article>
+          <article class="principle reveal delay-1"><div class="principle-number">02 — CONTROL</div><h3>Your device, your decisions.</h3><p>Make settings, permissions and personalization feel accessible instead of hidden.</p></article>
+          <article class="principle reveal delay-2"><div class="principle-number">03 — TRUST</div><h3>Privacy from the beginning.</h3><p>Build around respect for personal data, with transparency as a core principle.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+      <div class="wrap">
+        <div class="cta-panel reveal">
+          <div class="kicker">Take a closer look</div>
+          <h2>A different kind of operating system is taking shape.</h2>
+          <p>Explore the CapeOS demo, or get in touch to discuss a project, collaboration or quote request.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="/demo.html">Explore CapeOS <span aria-hidden="true">↗</span></a>
+            <button class="btn btn-secondary" type="button" data-open-contact>Contact / request a quote</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <div><div class="footer-name">CapeOS</div><div style="margin-top:5px">A privacy-first operating system concept.</div></div>
+      <div class="footer-links"><a href="#about">About</a><a href="#experience">Experience</a><a href="#contact">Contact</a><a href="/demo.html">Demo ↗</a></div>
+      <div>© <span id="year"></span> CapeOS</div>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <button class="modal-close" id="closeModal" type="button" aria-label="Close dialog">✕</button>
+      <div class="kicker">Let's talk</div>
+      <h2 id="modalTitle">Contact CapeOS</h2>
+      <p class="modal-intro">Tell us a little about what you have in mind. Your email app will open with the request ready to send.</p>
+      <form class="form-grid" id="contactForm">
+        <div class="field"><label for="contactName">Name</label><input id="contactName" name="name" autocomplete="name" placeholder="Your name" required /></div>
+        <div class="field"><label for="contactEmail">Email</label><input id="contactEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></div>
+        <div class="field"><label for="contactType">What is this about?</label><select id="contactType" name="type"><option>General contact</option><option>Request a quote</option><option>Collaboration</option><option>Feedback</option></select></div>
+        <div class="field"><label for="contactMessage">Message</label><textarea id="contactMessage" name="message" placeholder="Tell us what you're thinking..." required></textarea></div>
+        <button class="btn btn-primary" type="submit">Prepare email <span aria-hidden="true">↗</span></button>
+        <div class="form-hint">This static site does not send or store form submissions. It prepares an email in your default mail app. Set the recipient address in the CONTACT_EMAIL constant in this file before publishing.</div>
+        <div class="form-status" id="formStatus" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Replace this with the email address that should receive CapeOS enquiries.
+    const CONTACT_EMAIL = "";
+
+    const revealItems = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries, currentObserver) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            currentObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -35px 0px' });
+      revealItems.forEach(item => observer.observe(item));
+    } else {
+      revealItems.forEach(item => item.classList.add('visible'));
+    }
+
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }));
+
+    const modal = document.getElementById('contactModal');
+    const closeModal = () => {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    document.querySelectorAll('[data-open-contact]').forEach(button => button.addEventListener('click', () => {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('contactName').focus();
+    }));
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    modal.addEventListener('click', event => { if (event.target === modal) closeModal(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+    document.getElementById('contactForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const subject = `${data.get('type')} — CapeOS enquiry from ${data.get('name')}`;
+      const body = `Name: ${data.get('name')}\nEmail: ${data.get('email')}\nType: ${data.get('type')}\n\n${data.get('message')}`;
+      const status = document.getElementById('formStatus');
+      if (CONTACT_EMAIL && CONTACT_EMAIL.includes('@')) {
+        window.location.href = `mailto:${encodeURIComponent(CONTACT_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        status.textContent = 'Opening your email app…';
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(`Subject: ${subject}\n\n${body}`);
+        status.textContent = 'Request copied. Add your contact email in CONTACT_EMAIL to enable direct email sending.';
+      } catch (error) {
+        status.textContent = 'Add your contact email in CONTACT_EMAIL to enable direct email sending.';
+      }
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
